@@ -65,7 +65,7 @@ const Agent = ({ userName }: AgentProps) => {
         )}
       </div>
       <div className="w-full flex justify-center">
-        {currentCallStatus !== CallStatus.ACTIVE ? (
+        {true ? (
           <button className="relative btn-call">
             <span
               className={cn(
@@ -73,12 +73,7 @@ const Agent = ({ userName }: AgentProps) => {
                 currentCallStatus == CallStatus.CONNECTING && "hidden",
               )}
             />
-            <span>
-              {currentCallStatus == CallStatus.INACTIVE ||
-              currentCallStatus == CallStatus.FINISHED
-                ? "Call"
-                : "..."}
-            </span>
+            <span>{true ? "Call" : "..."}</span>
           </button>
         ) : (
           <button className="btn-disconnect">End</button>
