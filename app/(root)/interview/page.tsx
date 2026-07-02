@@ -1,11 +1,25 @@
 import Agent from "@/components/Agent";
+import { supabaseBrowserClient } from "@/configs/supabase";
 import React from "react";
 
-const Interview = () => {
+const Interview = async () => {
+  const { data: authData } = await supabaseBrowserClient.auth.getUser();
+  const email = authData?.user?.email;
+
+  const { data: userProfile } = await supabaseBrowserClient
+    .from("Users")
+    .select("name, _id")
+    .eq("email", email)
+    .maybeSingle();
+
   return (
     <>
       <h3>Interview Generation</h3>
-      <Agent userName={"you"} userId="user-1" type="generate" />
+      <Agent
+        userName={userProfile?.name ?? ""}
+        userId={userProfile?._id ?? ""}
+        type="generate"
+      />
     </>
   );
 };

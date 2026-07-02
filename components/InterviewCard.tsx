@@ -5,13 +5,22 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import DisplayTechIcons from "./DisplayTechIcons";
-const InterviewCard = ({ interview }: { interview: Interview }) => {
-  const feedback = null as Feedback | null;
-  const normalizedType = /mix/gi.test(interview?.type)
-    ? "Mixed"
-    : interview?.type;
+import { getInterviewFeedbackDetailsById } from "@/functions";
+const InterviewCard = async ({
+  type,
+  createdAt,
+  techstack,
+  role,
+  interviewId,
+  userId,
+}: InterviewCardProps) => {
+  const feedback: InterviewFeedbackDetailsResponse =
+    interviewId && userId
+      ? await getInterviewFeedbackDetailsById(interviewId, userId)
+      : null;
+  const normalizedType = /mix/gi.test(type) ? "Mixed" : type;
   const formattedDate = moment(
-    feedback?.createdAt || interview?.createdAt || Date.now(),
+    feedback?.createdAt || createdAt || Date.now(),
   ).format("MMMM Do YYYY, h:mm");
 
   return (
@@ -28,7 +37,7 @@ const InterviewCard = ({ interview }: { interview: Interview }) => {
             width={75}
             className="rounded-full object-fit size-20"
           />
-          <h3 className="mt-5 capitalize">{interview?.role} Interview</h3>
+          <h3 className="mt-5 capitalize">{role} Interview</h3>
           <div className="flex flex-row gap-5 mt-3">
             <div className="flex flex-row gap-2">
               <Image
@@ -50,13 +59,13 @@ const InterviewCard = ({ interview }: { interview: Interview }) => {
           </p>
         </div>
         <div className="flex flex-row justify-between">
-          <DisplayTechIcons techStack={interview?.techstack} />
+          <DisplayTechIcons techStack={techstack} />
           <Button className={"btn-primary"}>
             <Link
               href={
                 feedback
-                  ? `/interview/${interview?.id}/feedback`
-                  : `/interview/${interview?.id}`
+                  ? `/interview/${interviewId}/feedback`
+                  : `/interview/${interviewId}`
               }
             >
               {feedback ? "Check Feedback" : "View Interview"}

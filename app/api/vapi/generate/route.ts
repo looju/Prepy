@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { generateText } from "ai";
-import { groq, type GroqLanguageModelChatOptions } from "@ai-sdk/groq";
+import { type GroqLanguageModelChatOptions, createGroq } from "@ai-sdk/groq";
 import { getRandomInterviewCover } from "@/utils";
 import { supabaseClient } from "@/configs/supabase";
 export async function GET() {
@@ -15,8 +15,13 @@ export async function GET() {
 export async function POST(params: Request) {
   const { type, role, level, techstack, amount, userid } = await params.json();
   try {
+    const groq = createGroq({
+      apiKey: process.env.GROQ_API_KEY,
+    });
+    const model = groq("llama-3.1-8b-instant");
+
     const { text: results } = await generateText({
-      model: groq("qwen/qwen3-32b"),
+      model,
       providerOptions: {
         groq: {
           reasoningFormat: "parsed",

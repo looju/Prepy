@@ -1,7 +1,12 @@
 "use server";
 import { supabaseBrowserClient, supabaseClient } from "@/configs/supabase";
+import { feedbackSchema, FeedbackSchemaType } from "@/constants";
+import { createGroq, GroqLanguageModelChatOptions } from "@ai-sdk/groq";
+import { generateText, Output } from "ai";
 import { NextResponse } from "next/server";
 import { toast } from "sonner";
+import { z } from "zod";
+import { v4 as uuidv4 } from "uuid";
 
 const checkUserExists = async (email: string | undefined) => {
   const { data, error } = await supabaseClient
@@ -217,4 +222,22 @@ export const createInterviewFeedback = async (params: CreateFeedbackParams) => {
   } catch (error) {
     console.log("Error saving feedback:", error);
   }
+};
+
+export const getInterviewFeedbackDetailsById = async (
+  Id: String,
+  userId: string,
+) => {
+  const { data, error } = await supabaseClient
+    .from("Interview_feedback")
+    .select()
+    .eq("interviewId", Id)
+    .eq("userId", userId)
+    .single()
+    .overrideTypes<InterviewFeedbackDetailsResponse>();
+  if (error) {
+    console.log("Error getting interview details by id:", error);
+    return;
+  }
+  return data;
 };

@@ -29,6 +29,38 @@ interface Interview {
   finalized: boolean;
 }
 
+interface GeneratedInterviewProps {
+  id: number;
+  createdAt: string;
+  coverImage: string;
+  role: string;
+  level: string;
+  finalized: boolean;
+  type: string;
+  techStack: string[];
+  questions: Array<string>;
+  userId: string;
+}
+
+interface CategoryScores {
+  name: string;
+  score: number;
+  comment: string;
+}
+
+interface InterviewFeedbackDetailsResponse {
+  id: number;
+  createdAt: string;
+  userId: string;
+  interviewId: number;
+  totalScore: number;
+  categoryScores: CategoryScores[];
+  strengths: string[];
+  areasForImprovement: string[];
+  finalAssessment: string;
+  feedbackId: string;
+}
+
 interface CreateFeedbackParams {
   interviewId: string;
   userId: string;
